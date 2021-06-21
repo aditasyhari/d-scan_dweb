@@ -1,0 +1,41 @@
+{% extends "registration/basePage.html" %}
+{% load static %}
+
+{% block title %}
+  Login
+{% endblock %}
+
+{% block content %}
+<div class="form-container sign-in-container">
+  <form method="post">
+    {% csrf_token %}
+      <img src="{% static 'logo_D-scan.png' %}" alt="">
+      <h1>D - Scan</h1>
+      <!-- <div class="social-container">
+          <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+          <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div> -->
+      <!-- <input type="text" placeholder="Username" />
+      <input type="password" placeholder="Password" /> -->
+      {{ form.as_p }}
+      <a href="#">Forgot your password?</a>
+      <button>Login</button>
+  </form>
+</div>
+<div class="overlay-container">
+  <div class="overlay">
+      <div class="overlay-panel overlay-right">
+          <h1>Welcome Back!</h1>
+          <p>Please enter your username and password to continue</p>
+      </div>
+  </div>
+</div>
+
+  <!-- <h2 class="mt-5">Log In</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Log In</button>
+  </form> -->
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'headerPage.html' %}
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+	<style>
+		.text-caption-header-3-2 {
+			margin-bottom: 2.5rem;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mx-auto d-flex flex-lg-row flex-column hero-header-3-2">
+	<div class="left-column-header-3-2 flex-lg-grow-1 d-flex flex-column align-items-lg-start text-lg-start align-items-center text-center">
+		<h3>IDENTIFIKASI</h3>
+		<p class="text-caption-header-3-2">jenis penyakit pada batang buah naga<br> hanya dengan memasukan gambar batang buah naga yang berpenyakit, <br>kemudian <span style="color: #FF7468;">D-SCAN</span> dapat membantu anda mengenalinya..</p>
+	</div>
+	<div id="content">
+		<div class="row" id="row">
+			<div class="col">
+				<form id="upload" method="post" action="predictImage" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div id="drop">
+						Upload image
+						<a>Browse</a>
+						<input type="file" name="filePath" accept=".png,.jpg,.jpeg">
+					</div>
+				</form>
+			</div>
+			{% if predictedLabel %}
+			<div class="col">
+				<div class="predict">
+					<h5>Hasil identifikasi adalah <span>{{predictedLabel}}</span></h5>
+					<div class="image">
+						<img src={{filePathName}} alt="no image" />
+					</div>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+	<script src="{% static 'assets/js/script.js' %}"></script>
+{% endblock %}

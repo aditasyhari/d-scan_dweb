@@ -1,0 +1,60 @@
+{% extends 'dashboard/basePage.html' %}
+
+{% block title %} Edit Article {% endblock %}
+{% block brand %} Edit Article {% endblock %}
+
+{% block css %}
+<script src="https://cdn.tiny.cloud/1/kpz2txm2jsm1je5cp4cpne5cqeqm763hzx9r9bjjp3vf1qop/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+{% endblock %}
+
+{% block panel %}
+    <div class="panel-header panel-header-sm">
+    </div>
+{% endblock %}
+
+{% block content %}
+
+<form class="form-horizontal" action="update/" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <div class="col-12">
+            <div class="form-label-group">
+                <input type="text" class="form-control" name="judul" value="{{ article.judul }}" id="judul" required>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-12">
+            <div class="form-label-group">
+                <textarea name="isi" class="form-control" id="isi" rows="10" required>{{ article.isi }}</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-md-4">
+        <!-- <label for="jenis_penyakit" class="ml-2">Jenis Penyakit</label> -->
+        <select id="jenis_penyakit" name="jenis_penyakit" class="form-control custom-select">
+          <option disabled>Jenis Penyakit</option>
+          <option {% if article.jenis_penyakit == "antraknosa" %} selected {% endif %} value="antraknosa">Antraknosa</option>
+          <option {% if article.jenis_penyakit == "bercak merah" %} selected {% endif %} value="bercak merah">Bercak Merah</option>
+          <option {% if article.jenis_penyakit == "busuk batang" %} selected {% endif %} value="busuk batang">Busuk Batang</option>
+          <option {% if article.jenis_penyakit == "busuk hitam" %} selected {% endif %} value="busuk hitam">Busuk Hitam</option>
+          <option {% if article.jenis_penyakit == "kudis" %} selected {% endif %} value="kudis">Kudis</option>
+          <option {% if article.jenis_penyakit == "mosaik" %} selected {% endif %} value="mosaik">Mosaik</option>
+        </select>
+    </div>
+
+    <button class="btn btn-primary btn-block" type="submit">Update &nbsp;&nbsp;&nbsp;<span></span></button>
+</form>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+      height: 380,
+      toolbar_mode: 'floating',
+    });
+</script>
+{% endblock %}

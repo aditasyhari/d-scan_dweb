@@ -1,0 +1,202 @@
+{% extends 'dashboard/basePage.html' %}
+
+{% block title %} Dataset {{ nama_penyakit }} {% endblock %}
+{% block brand %} 
+    <a href="{% url 'validate' %}"><i class="now-ui-icons arrows-1_minimal-left mr-2"></i></a> 
+    Dataset {{ nama_penyakit }} <span class="text-success">(Sudah di Validasi)</span>
+{% endblock %}
+
+{% block css %}
+    <style>
+
+        .dataset ul {
+            list-style-type: none;
+        }
+
+        .dataset li {
+            display: inline-block;
+        }
+
+        .dataset input[type="checkbox"][id^="cb"] {
+            display: none;
+        }
+
+        .dataset label {
+            border: 1px solid #fff;
+            padding: 9px;
+            margin: 9px;
+            display: block;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dataset label:before {
+            background-color: white;
+            color: white;
+            content: " ";
+            display: block;
+            border-radius: 50%;
+            border: 1px solid grey;
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 150px;
+            height: 150px;
+            text-align: center;
+            line-height: 28px;
+            transition-duration: 0.4s;
+            transform: scale(0);
+        }
+
+        .dataset label img {
+            height: 120px;
+            width: 120px;
+            transition-duration: 0.2s;
+            transform-origin: 50% 50%;
+        }
+
+        .dataset :checked + label {
+            border-color: #ddd;
+        }
+
+        .dataset :checked + label:before {
+            content: "✓";
+            background-color: grey;
+            transform: scale(1);
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dataset :checked + label img {
+            transform: scale(0.9);
+            box-shadow: 0 0 5px #333;
+            z-index: -1;
+        }
+
+        .dataset .custom-select {
+            max-width: 250px;
+        }
+
+        .dataset .label-all {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block panel %}
+    <div class="panel-header panel-header-sm">
+    </div>
+{% endblock %}
+
+{% block content%}
+<form name="form1" id="form1" method="POST" onsubmit="actionOnSubmit()" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row no-gutters dataset">
+        <div class="col-md-6">
+            <ul>
+                <h6>Total : <span class="text-primary">{{ total }}</span><span class="text-secondary text-capitalize">  data</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="all">
+                    <label class="border label-all" for="all">Select All</label>
+                </div>
+                <span class="text-primary mr-3">OR</span> Klik gambar untuk checklist
+            </ul>
+            <span class="text-success">{{ success }}</span>
+        </div>
+        <div class="col-md-6 align-right text-right">
+            <div class="d-flex justify-content-end align-items-center">
+                <select name="action" id="action" class="form-control custom-select mr-2" onchange="myAction()">
+                    <option value="" selected disabled>Action Checklist</option>
+                    <option value="/uploadDataset">Upload</option>
+                    <option value="/downloadDataset">Download</option>
+                    <option value="/hapusDataset">Hapus</option>
+                </select>
+
+                <div id="up">
+                </div>
+
+                <div id="dw"> 
+                </div>
+
+                <div id="del">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutters dataset">
+        <ul>
+            <!-- <input type="file" id="dataset" name="dataset[]" onchange="view()"> -->
+        {% for i in listImagesPath %}
+            <li>
+                <input type="checkbox" id="cb{{ forloop.counter }}" class="data" name="cbdata" value="{{ i }}" />
+                
+                <!-- {{ forloop.counter }} -->
+                <label for="cb{{ forloop.counter }}"><img src="{{ i }}" id="dataset" /></label>
+            </li>
+        {% endfor%}
+        </ul>
+    </div>
+</form>
+<div class="mb-2"></div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+    document.getElementById('all').onclick = function() {
+        var checkboxes = document.getElementsByClassName('data');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+
+    function actionOnSubmit() {
+        var e = document.getElementById("action");
+        var formaction = e.options[e.selectedIndex].value;
+
+        var form1 = document.getElementById('form1');
+        form1.action = formaction;
+        
+        // console.log(formaction);
+    }
+
+    function myAction() {
+        var act = document.getElementById("action").value;
+        var up = document.getElementById("up");
+        var dw = document.getElementById("dw");
+        var del = document.getElementById("del");
+
+        switch(act) {
+            case '/uploadDataset':
+                up.innerHTML = `
+                    <button type="submit" class="btn btn-sm btn-info" title="Upload"><i class="fa fa-upload"></i></a>
+                `;
+                dw.innerHTML = ``;
+                del.innerHTML = ``;
+                break;
+            case '/downloadDataset':
+                up.innerHTML = ``;
+                dw.innerHTML = `
+                    <button type="submit" class="btn btn-sm btn-primary" title="Download"><i class="fa fa-download"></i></a>
+                `;
+                del.innerHTML = ``;
+                break;
+            case '/hapusDataset':
+                up.innerHTML = ``;
+                dw.innerHTML = ``;
+                del.innerHTML = `
+                    <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i class="fa fa-trash"></i></a>
+                `;
+                break;
+            default:
+                break;
+        }
+    }
+</script>
+{% endblock %}

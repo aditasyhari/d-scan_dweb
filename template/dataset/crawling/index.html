@@ -1,0 +1,320 @@
+{% extends 'dashboard/basePage.html' %}
+{% load static %}
+
+{% block css %}
+    {% if results %}
+        <style>
+            div.col-12 {
+                min-height: 80vh;
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                flex-direction: column;
+            }
+            .search-form {
+                top: 10%;
+                left: 25%;
+            }
+            .judul {
+                position: relative;
+                left: -25%;
+            }
+            .cari {
+                position: relative;
+                left: -25%;
+            }
+        </style>
+    {% else %}
+        <style>
+            div.col-12 {
+                min-height: 80vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            .search-form {
+                top: 10%;
+                left: 50%;
+            }
+        </style>
+    {% endif %}
+
+<style>
+    /* div.col-12 {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    } */
+    .search-form {
+        position: relative;
+        /* top: 10%;
+        left: 50%; */
+        width: 550px;
+        height: 40px;
+        border-radius: 40px;
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15),
+                    0 -1px 10px rgba(0, 0, 0, 0.15) ;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        transition: all 0.3s ease;
+    }
+    .search-form.focus {
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+    }
+    .search-input {
+        position: absolute;
+        top: 10px;
+        left: 38px;
+        font-size: 14px;
+        background: none;
+        color: #5a6674;
+        width: 490px;
+        height: 20px;
+        border: none;
+        -webkit-appearance: none;
+            -moz-appearance: none;
+                appearance: none;
+        outline: none;
+    }
+    .search-input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+                appearance: none;
+    }
+
+    .search-button {
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        height: 20px;
+        width: 20px;
+        padding: 0;
+        margin: 0;
+        border: none;
+        background: none;
+        outline: none !important;
+        cursor: pointer;
+    }
+    .search-button svg {
+        width: 20px;
+        height: 20px;
+        fill: #5a6674;
+    }
+
+    .desc {
+        margin-top: -12px;
+    }
+
+    .number-input {
+        width: 77px;
+        /* height: 25px !important; */
+    }
+
+
+    /* image */
+    .dataset ul {
+        list-style-type: none;
+    }
+
+    .dataset li {
+        display: inline-block;
+    }
+
+    .dataset input[type="checkbox"][id^="cb"] {
+        display: none;
+    }
+
+    .dataset label {
+        border: 1px solid #fff;
+        padding: 9px;
+        margin: 9px;
+        display: block;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .dataset label:before {
+        background-color: white;
+        color: white;
+        content: " ";
+        display: block;
+        border-radius: 50%;
+        border: 1px solid grey;
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        width: 150px;
+        height: 150px;
+        text-align: center;
+        line-height: 28px;
+        transition-duration: 0.4s;
+        transform: scale(0);
+    }
+
+    .dataset label img {
+        height: 120px;
+        width: 120px;
+        transition-duration: 0.2s;
+        transform-origin: 50% 50%;
+    }
+
+    .dataset :checked + label {
+        border-color: #ddd;
+    }
+
+    .dataset :checked + label:before {
+        content: "✓";
+        background-color: grey;
+        transform: scale(1);
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dataset :checked + label img {
+        transform: scale(0.9);
+        box-shadow: 0 0 5px #333;
+        z-index: -1;
+    }
+
+    .dataset .custom-select {
+        max-width: 250px;
+    }
+
+    .dataset .label-all {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+</style>
+
+{% endblock %}
+
+{% block title %} Dataset {% endblock %}
+{% block brand %} <a href="{% url 'dataset' %}" class="mr-2"><i class="now-ui-icons arrows-1_minimal-left"></i></a> Web Crawling {% endblock %}
+
+{% block panel %}
+    <div class="panel-header panel-header-sm">
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <form method="GET">
+            {% csrf_token %}
+            <input type="hidden" name="status_check" />
+            <div class="ml-1 mb-4 judul">
+                <h5 class="">Cari Dataset di Google Images</h5>
+                <div class="desc text-muted">masukan kata kunci pencarian image</div>
+            </div>
+            <div class="search-form">
+                <input type="search" value="" placeholder="Search" class="search-input" name="keyword" required>
+                <button type="submit" class="search-button">
+                    <svg class="submit-button">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="cari ml-1 mt-3 d-flex justify-content-start align-items-center">
+                <input type="number" class="number-input shadow-lg" name="jumlah" min="1" value="1" required>
+                <button type="submit" class="d-inline btn btn-sm btn-primary shadow-lg">Cari</button>
+            </div>
+        </form>
+    
+        <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" display="none">
+            <symbol id="search" viewBox="0 0 32 32">
+            <path d="M 19.5 3 C 14.26514 3 10 7.2651394 10 12.5 C 10 14.749977 10.810825 16.807458 12.125 18.4375 L 3.28125 27.28125 L 4.71875 28.71875 L 13.5625 19.875 C 15.192542 21.189175 17.250023 22 19.5 22 C 24.73486 22 29 17.73486 29 12.5 C 29 7.2651394 24.73486 3 19.5 3 z M 19.5 5 C 23.65398 5 27 8.3460198 27 12.5 C 27 16.65398 23.65398 20 19.5 20 C 15.34602 20 12 16.65398 12 12.5 C 12 8.3460198 15.34602 5 19.5 5 z" />
+            </symbol>
+        </svg>
+
+    </div>
+    
+    {% if results %}
+    <form name="form1" id="form1" method="POST" onsubmit="actionOnSubmit()" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mt-5 pl-5 pr-2 dataset">
+            <ul class="ml-2">
+                <h6 class="ml-2">Total : <span class="text-primary">{{ results|length }}</span><span class="text-secondary text-capitalize">  data</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="all">
+                    <label class="border label-all" for="all">Select All</label>
+                </div>
+                <span class="text-primary mr-3">OR</span> Klik gambar untuk checklist
+            </ul>
+            <ul class="ml-3">
+                <div class="d-flex justify-content-start align-items-center">
+                    <select name="action" id="action" class="form-control custom-select mr-2" onclick="myAction()">
+                        <option value="" selected disabled>Action Checklist</option>
+                        <option value="/validasiDataset">Download & Validasi</option>
+                    </select>
+    
+                    <div id="val" class="d-flex jjustify-content-end align-items-center">
+                    </div>
+
+                </div>
+            </ul>
+            <ul>
+            {% for i in results %}
+                <li>
+                    <input type="checkbox" id="cb{{ forloop.counter }}" class="data" name="cbdata" value="{{ i }}" />
+                    <label for="cb{{ forloop.counter }}"><img src="{{ i }}" id="dataset" /></label>
+                </li>
+            {% endfor%}
+            </ul>
+        </div>
+    </form>
+    {% endif %}
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+    document.getElementById('all').onclick = function() {
+        var checkboxes = document.getElementsByClassName('data');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+
+    function actionOnSubmit() {
+        var e = document.getElementById("action");
+        var formaction = e.options[e.selectedIndex].value;
+
+        var form1 = document.getElementById('form1');
+        form1.action = formaction;
+        
+        // console.log(formaction);
+    }
+
+    function myAction() {
+        var act = document.getElementById("action").value;
+        var val = document.getElementById("val");
+        var del = document.getElementById("del");
+
+        switch(act) {
+            case '/validasiDataset':
+                val.innerHTML = `
+                    <select name="jenis_penyakit" id="" class="form-control custom-select mr-2" required>
+                        <option value="" selected disabled>Jenis Penyakit</option>
+                        <option value="antraknosa">Antraknosa</option>
+                        <option value="bercakMerah">Bercak Merah</option>
+                        <option value="busukBatang">Busuk Batang</option>
+                        <option value="busukHitam">Busuk Hitam</option>
+                        <option value="kudis">Kudis</option>
+                        <option value="mosaik">Mosaik</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary" type="submit">Validasi</button>
+                `;
+                break;
+            default:
+                break;
+        }
+    }
+</script>
+{% endblock %}

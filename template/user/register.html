@@ -1,0 +1,24 @@
+{% extends 'dashboard/basePage.html' %}
+
+{% block title %} Add User {% endblock %}
+{% block brand %} Add User {% endblock %}
+
+{% block panel %}
+    <div class="panel-header panel-header-sm">
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card card-register mx-auto">
+        <div class="card-header">Add User</div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                {% include 'includes/bs4_form.html' with form=form %}
+                <button class="btn btn-primary btn-block">Add</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

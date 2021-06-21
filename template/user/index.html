@@ -1,0 +1,64 @@
+{% extends 'dashboard/basePage.html' %}
+
+{% block title %} User {% endblock %}
+{% block brand %} User {% endblock %}
+
+{% block css %}
+<style>
+    .alert-error {
+        background-color: rgba(255, 0, 0, 0.85);
+    }
+    .table-color {
+        /* background: linear-gradient(to right, #0c2646 0%, #204065 60%, #2a5788 100%); */
+        /* color: white; */
+    }
+    thead {
+        font-size: 11px;
+        background-color: #f96332;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block panel %}
+    <div class="panel-header panel-header-sm">
+    </div>
+{% endblock %}
+
+{% block content %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+    {{ message }}
+</div>
+{% endfor %}
+
+<a href="{% url 'register' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add</a>
+
+<table class="table table-color table-borderless">
+    <thead>
+      <tr>
+        <th scope="col">No</th>
+        <th scope="col">Name</th>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Last Login</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.last_login |date:"d-m-Y H:i:s" }}</td>
+                <td>
+                    {% if user.is_superuser == 0 %}
+                    <a class="btn btn-sm btn-danger" href="user/delete/{{ user.id }}"><i class="fa fa-trash"></i></a></td>
+                    {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'dashboard/basePage.html' %}
+{% load static %}
+
+{% block title %} Dataset {% endblock %}
+{% block brand %} Dataset {% endblock %}
+
+{% block panel %}
+    <div class="panel-header panel-header-sm">
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+      <div class="col-md-4">
+        <a href="{% url 'crawling' %}" class="">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-description">Cari dataset di google</div>
+              <hr>
+              <h5>Web Crawling</h5>
+            </div>
+            <div class="card-body">
+              <img src="{% static 'assets/img/web_search.png' %}" class="mx-auto d-block" height="200">
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4">
+        <a href="{% url 'novalidate' %}" class="">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-description">Dataset sudah terkumpul (belum divalidasi)</div>
+              <hr>
+              <h5 class="text-capitalize">belum divalidasi</h5>
+            </div>
+            <div class="card-body">
+              <img src="{% static 'assets/img/not_yet_validated.png' %}" class="mx-auto d-block" height="200">
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4">
+        <a href="{% url 'validate' %}" class="">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-description">Dataset sudah terkumpul (sudah divalidasi)</div>
+              <hr>
+              <h5 class="text-capitalize">sudah divalidasi</h5>
+            </div>
+            <div class="card-body">
+              <img src="{% static 'assets/img/done_validate.png' %}" class="mx-auto d-block" height="200">
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+{% endblock %}

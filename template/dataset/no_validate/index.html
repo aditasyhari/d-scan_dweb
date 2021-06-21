@@ -1,0 +1,91 @@
+{% extends 'dashboard/basePage.html' %}
+{% load static %}
+
+{% block title %} Dataset - Belum di Validasi {% endblock %}
+{% block brand %} <a href="{% url 'dataset' %}" class="mr-2"><i class="now-ui-icons arrows-1_minimal-left"></i></a> Dataset Belum di Validasi{% endblock %}
+
+{% block panel %}
+    <div class="panel-header panel-header-sm">
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <a class="col-lg-4" href="{% url 'no_antraknosa' %}">
+          <div class="card card-chart">
+            <div class="card-header">
+              <h5 class="card-category">Dataset <span class="text-lowercase">(belum di validasi)</span></h5>
+              <h4 class="card-title">Antraknosa</h4>
+              
+            </div>
+            <div class="card-body">
+                <img src="{% static 'dashboard/assets/img/img-dataset/antraks.jpg' %}" alt="">
+            </div>
+            
+          </div>
+        </a>
+        <a class="col-lg-4 col-md-6" href="{% url 'no_bercakMerah' %}">
+          <div class="card card-chart">
+            <div class="card-header">
+              <h5 class="card-category">Dataset <span class="text-lowercase">(belum di validasi)</span></h5>
+              <h4 class="card-title">Bercak Merah</h4>
+              
+            </div>
+            <div class="card-body">
+                <img src="{% static 'dashboard/assets/img/img-dataset/bercakmerah.jpg' %}" alt="">
+            </div>
+
+          </div>
+        </a>
+        <a class="col-lg-4 col-md-6" href="{% url 'no_busukBatang' %}">
+          <div class="card card-chart">
+            <div class="card-header">
+              <h5 class="card-category">Dataset <span class="text-lowercase">(belum di validasi)</span></h5>
+              <h4 class="card-title">Busuk Batang</h4>
+            </div>
+            <div class="card-body">
+              <img src="{% static 'dashboard/assets/img/img-dataset/busukbatang.jpg' %}" alt="">
+            </div>
+
+          </div>
+        </a>
+        <a class="col-lg-4 col-md-6" href="{% url 'no_busukHitam' %}">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-category">Dataset <span class="text-lowercase">(belum di validasi)</span></h5>
+                <h4 class="card-title">Busuk Hitam</h4>
+              </div>
+              <div class="card-body">
+                <img src="{% static 'dashboard/assets/img/img-dataset/busukhitam.jpg' %}" alt="">
+              </div>
+  
+            </div>
+        </a>
+        <a class="col-lg-4 col-md-6" href="{% url 'no_kudis' %}">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-category">Dataset <span class="text-lowercase">(belum di validasi)</span></h5>
+                <h4 class="card-title">Kudis</h4>
+              </div>
+              <div class="card-body">
+                <img src="{% static 'dashboard/assets/img/img-dataset/kudis.jpg' %}" alt="">
+              </div>
+  
+            </div>
+        </a>
+        <a class="col-lg-4 col-md-6" href="{% url 'no_mosaik' %}">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-category">Dataset <span class="text-lowercase">(belum di validasi)</span></h5>
+                <h4 class="card-title">Mosaik</h4>
+              </div>
+              <div class="card-body">
+                <img src="{% static 'dashboard/assets/img/img-dataset/mosaik.jpg' %}" alt="">
+              </div>
+  
+            </div>
+        </a>
+    </div>
+
+{% endblock %}

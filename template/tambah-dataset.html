@@ -1,0 +1,207 @@
+{% extends "headerPage.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+  body {
+    overflow: visible;
+  }
+  .ui-sortable {
+    padding: 0 !important;
+  }
+  .ui-sortable-placeholder { 
+    	border: 1px dashed black!important; 
+        visibility: visible !important;
+        background: #eeeeee78 !important;
+  }
+  .ui-sortable-placeholder * { visibility: hidden; }
+  .RearangeBox.dragElemThumbnail{opacity:0.6;}
+  .RearangeBox {
+      width: 190px;
+      height: 240px;
+      padding:10px 5px;
+      cursor: all-scroll;
+      float: left;
+      border: 1px solid #9E9E9E;
+      font-family: sans-serif;
+      display: inline-block;            
+      margin: 15px !important;
+      text-align: center;
+      /* color: #673ab7; */
+      background: #C7934E;
+      /* background: #FF7468; */
+    /*color: rgb(34, 34, 34);
+      background: #f3f2f1;     */
+  }
+
+  .IMGthumbnail{
+    max-width:170px;
+    height:220px;
+    margin:auto;
+    background-color: #ececec;
+    padding:2px;
+    border:none;
+  }
+
+  .IMGthumbnail img{
+    max-width:100%;
+    max-height:100%;
+  }
+
+  .imgThumbContainer{
+    /* margin: 14px; */
+    border: solid;
+    display: inline-block;
+    justify-content: center;
+      position: relative;
+      border: 1px solid rgba(0,0,0,0.14);
+    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,0.2);
+      box-shadow: 0 0 4px 0 rgba(0,0,0,.2);
+  }
+
+  .imgThumbContainer > .imgName{
+    text-align: center;
+    /* padding: 2px 6px; */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size:13px;
+    height: 35px;
+    overflow: hidden;
+  }
+
+  .imgThumbContainer > .imgRemoveBtn{
+      position: absolute;
+      color: #e91e63ba;
+      right: 2px;
+      top: 2px;
+      cursor: pointer;
+      display: none;
+  }
+
+  .RearangeBox:hover > .imgRemoveBtn{ 
+      display: block;
+  }
+
+  .text-caption-header-3-2 {
+    margin-bottom: 2.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div>
+    <div class="row mx-auto d-flex flex-lg-row flex-column hero-header-3-2">
+      
+      <form action="/upload-dataset" class="" id="fileUpload" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+      
+        <div class="left-column-header-3-2 flex-lg-grow-1 d-flex flex-column align-items-lg-start text-lg-start align-items-center text-center">
+          <h3>Tambah Dataset</h3>
+          <p class="text-caption-header-3-2">Yuk! bantu kami untuk mengembangkan model yang lebih handal lagi, agar kedepannya <span style="color: #FF7468;">D-SCAN</span> dapat membantu dengan maksimal.</p>
+        </div>
+          <div class="row">
+            <div class="col">
+              <select name="jenis_penyakit" id="" class="form-control custom-select mr-2" required>
+                <option value="" selected disabled>Pilih Jenis Penyakit</option>
+                <option value="antraknosa">Antraknosa</option>
+                <option value="bercakMerah">Bercak Merah</option>
+                <option value="busukBatang">Busuk Batang</option>
+                <option value="busukHitam">Busuk Hitam</option>
+                <option value="kudis">Kudis</option>
+                <option value="mosaik">Mosaik</option>
+                <option value="lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="col">
+                <input id="files" class="form-control" name="dataset" type="file" accept="image/*" multiple required />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button type="submit" id="btnSubmit" class="d-none btn btn-primary mt-3 mb-3 w-100">Unggah Dataset</button>
+            </div>
+          </div>
+
+          {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success mt-3" role="alert">
+              {{message}}
+            </div>
+            {% endfor %}
+          {% endif %}
+
+          <div>
+            <div id="sortableImgThumbnailPreview">
+            </div>
+          </div>
+
+
+
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+$('#files').change(function() {
+  $('#btnSubmit').removeClass('d-none');
+});
+$(function() {
+    $("#sortableImgThumbnailPreview").sortable({
+      connectWith: ".RearangeBox",
+    
+      start: function( event, ui ) { 
+            $(ui.item).addClass("dragElemThumbnail");
+            ui.placeholder.height(ui.item.height());
+    
+        },
+        stop:function( event, ui ) { 
+            $(ui.item).removeClass("dragElemThumbnail");
+        }
+    });
+    $("#sortableImgThumbnailPreview").disableSelection();
+});
+
+document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+  function handleFileSelect(evt) {
+    
+    var files = evt.target.files; 
+    var output = document.getElementById("sortableImgThumbnailPreview");
+    
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0, f; f = files[i]; i++) {
+
+      // Only process image files.
+      if (!f.type.match('image.*')) {
+        continue;
+      }
+
+      var reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          // Render thumbnail.
+           var imgThumbnailElem = "<div class='RearangeBox imgThumbContainer'><i class='material-icons imgRemoveBtn' onclick='removeThumbnailIMG(this)'>cancel</i><div class='IMGthumbnail' ><img  src='" + e.target.result + "'" + "title='"+ theFile.name + "'/></div><div class='imgName'>"+ theFile.name +"</div></div>";
+                    
+            output.innerHTML = output.innerHTML + imgThumbnailElem; 
+          
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(f);
+    }
+  }
+
+  function removeThumbnailIMG(elm){
+    elm.parentNode.outerHTML='';
+  }
+
+</script>
+{% endblock %}
+
