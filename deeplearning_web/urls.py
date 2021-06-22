@@ -58,6 +58,7 @@ urlpatterns = [
     url('predictImage',views.predictImage,name='predictImage'),
     url('mobile',views.mobile,name='mobile'),
     url('dashboard',views.dashboard,name='dashboard'),
+    url('register',views.register_user,name='register_user'),
     #  url('viewDataBase',views.viewDataBase,name='viewDataBase'),
 ]
 

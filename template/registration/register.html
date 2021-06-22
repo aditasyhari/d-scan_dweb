@@ -1,0 +1,64 @@
+{% extends "registration/basePage.html" %}
+{% load static %}
+
+{% block title %}
+  Register
+{% endblock %}
+
+{% block css %}
+<style>
+  .container {
+    min-height: 650px;
+  }
+
+  .form-label-group {
+    margin-bottom: 12px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container sign-in-container">
+  <form method="post">
+    {% csrf_token %}
+      <img src="{% static 'logo_D-scan.png' %}" alt="">
+      <h1>D - Scan</h1>
+      <!-- <div class="social-container">
+          <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+          <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div> -->
+      <!-- <input type="text" placeholder="Username" />
+      <input type="password" placeholder="Password" /> -->
+      <!-- {{ form.as_p }} -->
+      {% include 'includes/bs4_form.html' with form=form %}
+
+      <a href="accounts/login">Sudah punya akun? Login</a>
+      <button>Register</button>
+  </form>
+</div>
+<div class="overlay-container">
+  <div class="overlay">
+      <div class="overlay-panel overlay-right">
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-success mt-3" role="alert">
+            {{message}}
+          </div>
+          {% endfor %}
+        {% else %}
+          <h1>Hello !!</h1>
+          <p>Please registration to access more access</p>
+        {% endif %}
+      </div>
+  </div>
+</div>
+
+  <!-- <h2 class="mt-5">Log In</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Log In</button>
+  </form> -->
+{% endblock %}

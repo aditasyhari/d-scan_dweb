@@ -36,6 +36,14 @@ class RegistrationForm(forms.Form):
         ), 
         label=_("Email address")
     )
+    phone = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control', 
+                'placeholder':'Phone Number'
+            }
+        )
+    )
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs=dict(required=True, max_length=30, render_value=False, placeholder='Password')

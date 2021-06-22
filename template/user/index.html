@@ -41,6 +41,7 @@
         <th scope="col">Name</th>
         <th scope="col">Username</th>
         <th scope="col">Email</th>
+        <th scope="col">Phone</th>
         <th scope="col">Last Login</th>
         <th scope="col">Action</th>
       </tr>
@@ -52,9 +53,10 @@
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
                 <td>{{ user.last_login |date:"d-m-Y H:i:s" }}</td>
                 <td>
-                    {% if user.is_superuser == 0 %}
+                    {% if user.is_staff == 0 %}
                     <a class="btn btn-sm btn-danger" href="user/delete/{{ user.id }}"><i class="fa fa-trash"></i></a></td>
                     {% endif %}
             </tr>

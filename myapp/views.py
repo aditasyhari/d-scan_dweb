@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, staff_required, superuser_required
+from django.contrib.auth.decorators import user_passes_test
 from django.urls import resolve
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect, HttpResponse
@@ -10,6 +11,7 @@ from zipfile import ZipFile
 import urllib
 import tempfile
 import uuid
+from math import *
 
 import requests
 from io import BytesIO
@@ -63,7 +65,8 @@ def tambahDataset(request):
 def scan(request):
     return render(request,'scan.html')
 
-@login_required
+
+@superuser_required
 def dashboard(request):
     import os
 
@@ -197,6 +200,9 @@ def user(request):
         users = paginator.page(paginator.num_pages)
     return render(request, 'user/index.html', {'users': users})
 
+def registerUser(request):
+    return render(request, 'registration/register.html')
+
 @csrf_protect
 def register(request):
     if request.method == 'POST':
@@ -204,20 +210,46 @@ def register(request):
         if form.is_valid():
             user = User(
                 username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1'],
+                # password=form.cleaned_data['password1'],
                 is_staff=False,
                 is_active=True,
-                is_superuser=False,
+                is_superuser=True,
                 email=form.cleaned_data['email'],
+                phone=form.cleaned_data['phone'],
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name']
             )
+            user.set_password(form.cleaned_data['password1'])
             user.save()
             messages.success(request, 'User was added successfully!')
             return redirect('user')
     else:
         form = RegistrationForm()
     return render(request, 'user/register.html', {'form': form})
+
+@csrf_protect
+def register_user(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = User(
+                username=form.cleaned_data['username'],
+                # password=form.cleaned_data['password1'],
+                is_staff=False,
+                is_active=True,
+                is_superuser=True,
+                email=form.cleaned_data['email'],
+                phone=form.cleaned_data['phone'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name']
+            )
+            user.set_password(form.cleaned_data['password1'])
+            user.save()
+            messages.success(request, 'Akun kontributor berhasil dibuat!')
+            return redirect('register_user')
+    else:
+        form = RegistrationForm()
+        return render(request, 'registration/register.html', {'form': form})
 
 @login_required
 def user_delete(request, id):
@@ -254,20 +286,21 @@ def predictImage(request):
         predictedAcc = np.max(y)*100
         # print(labels[np.argmax(y)], np.max(y))
 
-        if (predictedLabel == 'Antraks'):
-            shutil.copy2(testimage, './media/no-validate/antraknosa/'+fileObj.name)
-        elif (predictedLabel == 'Bercak Merah'):
-            shutil.copy2(testimage, './media/no-validate/bercakMerah/'+fileObj.name)
-        elif (predictedLabel == 'Busuk Batang'):
-            shutil.copy2(testimage, './media/no-validate/busukBatang/'+fileObj.name)
-        elif (predictedLabel == 'Busuk Hitam'):
-            shutil.copy2(testimage, './media/no-validate/busukHitam/'+fileObj.name)
-        elif (predictedLabel == 'Kudis'):
-            shutil.copy2(testimage, './media/no-validate/kudis/'+fileObj.name)
-        else:
-            shutil.copy2(testimage, './media/no-validate/mosaik/'+fileObj.name)
+        # if (predictedLabel == 'Antraknosa'):
+        #     shutil.copy2(testimage, './media/no-validate/antraknosa/'+fileObj.name)
+        # elif (predictedLabel == 'Bercak Merah'):
+        #     shutil.copy2(testimage, './media/no-validate/bercakMerah/'+fileObj.name)
+        # elif (predictedLabel == 'Busuk Batang'):
+        #     shutil.copy2(testimage, './media/no-validate/busukBatang/'+fileObj.name)
+        # elif (predictedLabel == 'Busuk Hitam'):
+        #     shutil.copy2(testimage, './media/no-validate/busukHitam/'+fileObj.name)
+        # elif (predictedLabel == 'Kudis'):
+        #     shutil.copy2(testimage, './media/no-validate/kudis/'+fileObj.name)
+        # else:
+        #     shutil.copy2(testimage, './media/no-validate/mosaik/'+fileObj.name)
+        acc = floor(predictedAcc)
 
-        context = {'filePathName':filePathName,'predictedLabel':predictedLabel,'predictedAcc':predictedAcc}
+        context = {'filePathName':filePathName,'predictedLabel':predictedLabel,'acc':acc}
         return render(request,'scan.html',context)
 
     else:
