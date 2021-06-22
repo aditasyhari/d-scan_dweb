@@ -64,12 +64,20 @@
               <p>Dataset</p>
             </a>
           </li>
-          <li class="{% active_link 'user' %}">
-            <a href="/user">
-              <i class="now-ui-icons users_single-02"></i>
-              <p>User</p>
+          <li class="">
+            <a href="/tambah-dataset">
+              <i class="now-ui-icons ui-1_simple-add"></i>
+              <p>Tambah Dataset</p>
             </a>
           </li>
+          {% if user.is_staff %}
+            <li class="{% active_link 'user' %}">
+              <a href="/user">
+                <i class="now-ui-icons users_single-02"></i>
+                <p>User</p>
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>

@@ -1,0 +1,50 @@
+{% extends "headerPage.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="mx-auto d-flex flex-lg-row flex-row hero-header-3-2">
+      
+      <form action="/upload-dataset" class="" id="fileUpload" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row mt-5">
+          <div class="col">
+            <div class=" flex-lg-grow-1 d-flex flex-column align-items-lg-start text-lg-start align-items-center text-center">
+              <h3 class="d-lg-block d-none title-text-big-header-3-2">VERIFIKASI</h3>
+              <p class="text-caption-header-3-2">Silahkan Masukkan kode OTP yang sudah anda terima melalui sms, untuk melanjutkan unggah dataset.<span style="color: #FF7468;"> Terimakasih</span>.</p>
+              <input type="number" name="otp" class="form-control" placeholder="Kode OTP" required>
+              <button type="submit" id="btnSubmit" class="btn btn-primary mt-3 mb-3 w-100">Submit</button>
+            </div>
+          </div>
+          <div class="col">
+
+            <div class=" d-flex justify-content-center justify-content-lg-center text-center pe-0">
+              <input type="hidden" name="jenis_penyakit" value="{{jenis_penyakit}}" required>
+              <input type="hidden" name="id_user" class="" value="{{id_user}}" required>
+              <!-- <input id="files" class="form-control" name="dataset[]" type="file" accept="image/*" value="{{img_data}}" multiple required /> -->
+            </div>
+            <img src="{% static 'assets/img/secure.svg' %}" class="img-fluid" alt="">
+          </div>
+
+
+        </div>
+
+      </form>
+      
+
+    </div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+
+</script>
+
+{% endblock %}
+

@@ -40,7 +40,7 @@ class RegistrationForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control', 
-                'placeholder':'Phone Number'
+                'placeholder':'ex: +628123456xxxx'
             }
         )
     )

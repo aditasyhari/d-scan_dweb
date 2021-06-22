@@ -23,6 +23,9 @@ from json import dumps
 import efficientnet.tfkeras
 from tensorflow.keras.models import load_model
 
+import random
+from twilio.rest import Client
+
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Article
@@ -59,11 +62,18 @@ def index(request):
 def homepage(request):
     return render(request,'index.html')
 
+def statistik(request):
+    return render(request,'statistik.html')
+
+@superuser_required
 def tambahDataset(request):
     return render(request,'tambah-dataset.html')
 
 def scan(request):
     return render(request,'scan.html')
+
+
+
 
 
 @superuser_required
@@ -335,14 +345,43 @@ async def mobile(request) :
 #                                DATASET
 # ====================================================================
 
+imgs = []
+
 @csrf_protect
-def uploadDataset(request):
+def send_otp(request):
     if request.method == 'POST':
+
+        id_user = request.POST['id_user']
         jenis_penyakit = request.POST['jenis_penyakit']
         img_data = request.FILES.getlist('dataset')
-        # print(jenis_penyakit)
-        # print(img_data)
+        phone = request.POST['phone']
+        print(phone)
+        print(id_user)
+        print(img_data)
+
+        user = User.objects.get(id=id_user)
+
+        account_sid = "AC4688e7199d8e7c8b412fe609ba6167f0"
+        auth_token = "3393672809410fa092f1c609c1e046bd"
+        client = Client(account_sid, auth_token)
+
+        # global imgs
+        # imgs.append(img_data)
+
+        # print(imgs)
+
+        otp = random.randint(1000,9999)
+        user.otp = otp
+        user.save()
+
+        message = client.messages.create(
+                body='masukkan code otp '+str(otp),
+                from_='+14154771214',
+                to=phone
+        )
+
         img_dir = './media/no-validate/'+jenis_penyakit+'/'
+
         for i in img_data:
             print(i)
             extension = os.path.splitext(i.name)
@@ -350,12 +389,43 @@ def uploadDataset(request):
             with open(img_dir+ file_name, 'wb+') as destination:
                 for chunk in i.chunks():#Prevent the file size from causing memory overflow
                     destination.write(chunk)
-            # shutil.move('.'+i, './media/no-validate/'+jenis_penyakit+'/')
 
-        messages.success(request, 'Terimakasih! Dataset berhasil diunggah!!')
-        return redirect('/tambah-dataset')
+        context = {'jenis_penyakit':jenis_penyakit, 'img_data':img_data, 'id_user': id_user}
+
+        # return render(request, 'send-otp.html')
+        return render(request, 'send-otp.html', context)
+
+@csrf_protect
+def uploadDataset(request):
+    if request.method == 'POST':
+        id_user = request.POST['id_user']
+        jenis_penyakit = request.POST['jenis_penyakit']
+        otp = request.POST['otp']
+        # img_data = request.FILES.getlist('dataset')
+        print(jenis_penyakit)
+        # print(img_data)
+
+        user = User.objects.get(id=id_user)
+
+
+        if otp == user.otp:
+            # img_dir = './media/no-validate/'+jenis_penyakit+'/'
+            # for i in imgs:
+            #     print(i)
+            #     extension = os.path.splitext(i.name)
+            #     file_name = '{}{}'.format(uuid.uuid4(), extension[1])
+            #     with open(img_dir+ file_name, 'wb+') as destination:
+            #         for chunk in i.chunks():#Prevent the file size from causing memory overflow
+            #             destination.write(chunk)
+                # shutil.move('.'+i, './media/no-validate/'+jenis_penyakit+'/')
+
+            messages.success(request, 'Terimakasih! Dataset berhasil diunggah!!')
+            return redirect('/tambah-dataset')
+        else:
+            return render(request, 'tambah-dataset.html', {'pesan': 'Kode OTP salah!'})
+
     else:
-        return redirect('/tambah-dataset')
+        return redirect('/')
 
 @login_required
 def dataset(request):

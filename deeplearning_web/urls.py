@@ -50,15 +50,21 @@ urlpatterns = [
     path('hapusDataset',views.hapusDataset,name='hapusDataset'),
     path('downloadDataset',views.downloadDataset,name='downloadDataset'),
 
+    path('tambah-dataset/', views.tambahDataset, name='tambahDataset'),
+    path('tambah-dataset/send-otp/',views.send_otp,name='send_otp'),
+
     url(r'^$',views.index,name='index'),
     url('home',views.homepage,name='homepage'),
+    url('statistik',views.statistik,name='statistik'),
     url('scan',views.scan,name='scan'),
-    url('tambah-dataset',views.tambahDataset,name='tambahDataset'),
+    # url('tambah-dataset',views.tambahDataset,name='tambahDataset'),
     url('upload-dataset',views.uploadDataset,name='uploadDataset'),
     url('predictImage',views.predictImage,name='predictImage'),
     url('mobile',views.mobile,name='mobile'),
     url('dashboard',views.dashboard,name='dashboard'),
     url('register',views.register_user,name='register_user'),
+
+    # otp
     #  url('viewDataBase',views.viewDataBase,name='viewDataBase'),
 ]
 

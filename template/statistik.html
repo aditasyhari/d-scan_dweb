@@ -1,0 +1,146 @@
+{% extends "headerPage.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+  body {
+    overflow: visible;
+  }
+  .text-caption-header-3-2 {
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div>
+    <div class="mx-auto d-flex flex-lg-row flex-column hero-header-3-2">
+      <!-- Left Column -->
+      <div class="left-column-header-3-2 flex-lg-grow-1 d-flex flex-column align-items-lg-start text-lg-start align-items-center text-center">
+        <h1 class="d-lg-block d-none title-text-big-header-3-2">Statistik</h1>
+        <p class="text-caption-header-3-2">Statistik Model dan Dataset yang digunakan <span style="color: #FF7468;">D-SCAN</span> saat ini.</p>
+        
+        <img class="mb-5" src="{% static 'assets/acc_model.png' %}" style="max-width: 100%;">
+        <div id="chart1"></div>
+        
+      </div>
+      
+      <!-- Right Column -->
+      <div class="right-column-header-3-2 d-flex justify-content-center justify-content-lg-center text-center pe-0">
+        <div class="d-flex flex-column">
+          <div id="chart2"></div>
+          <h1 class="d-lg-block d-none title-text-big-header-3-2 mt-4">Total Dataset: <span style="color: #FF7468 !important;">1287</span></h1>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<script>
+var options1 = {
+  chart: {
+    type: 'donut'
+  },
+  series: [854, 194, 239],
+  labels: ['Data Training', 'Data Validation', 'Data Testing'],
+  plotOptions: {
+    pie: {
+      customScale: 1
+    }
+  }
+}
+
+var chart = new ApexCharts(document.querySelector("#chart1"), options1);
+
+chart.render();
+
+
+var options2 = {
+        series: [{
+          name: 'Jumlah Data',
+          data: [226, 182, 57, 253, 288, 281]
+        }],
+          chart: {
+          height: 350,
+          type: 'bar',
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 10,
+            dataLabels: {
+              position: 'top', // top, center, bottom
+            },
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val) {
+            return val + "";
+          },
+          offsetY: -20,
+          style: {
+            fontSize: '12px',
+            colors: ["#FF7468"]
+          }
+        },
+        
+        xaxis: {
+          categories: ["Antraknosa", "Busuk Batang", "Busuk Hitam", "Bercak Merah", "Kudis", "Mosaik"],
+          position: 'top',
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false
+          },
+          crosshairs: {
+            fill: {
+              type: 'gradient',
+              gradient: {
+                colorFrom: '#D8E3F0',
+                colorTo: '#BED1E6',
+                stops: [0, 100],
+                opacityFrom: 0.4,
+                opacityTo: 0.5,
+              }
+            }
+          },
+          tooltip: {
+            enabled: true,
+          }
+        },
+        yaxis: {
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false,
+          },
+          labels: {
+            show: false,
+            formatter: function (val) {
+              return val + " image";
+            }
+          }
+        
+        },
+        title: {
+          text: 'Penyakit Batang Buah Naga',
+          floating: true,
+          offsetY: 330,
+          align: 'center',
+          style: {
+            color: '#444'
+          }
+        }
+        };
+
+        var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+        chart2.render();
+</script>
+{% endblock %}
+
